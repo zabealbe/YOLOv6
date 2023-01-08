@@ -89,8 +89,6 @@ SOTA performance on the COCO dataset.
 
 
 ## Quick Start
-If you just want to try YOLOv6, check out the [live demo](https://yolov6.dagshubusercontent.com/).
-
 <details>
 <summary> Install</summary>
 
