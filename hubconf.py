@@ -58,6 +58,7 @@ def check_img_size(img_size, s=32, floor=0):
         print(f'WARNING: --img-size {img_size} must be multiple of max stride {s}, updating to {new_size}')
     return new_size if isinstance(img_size,list) else [new_size]*2
 
+
 def precess_image(path, img_size, stride):
     '''Process image before image inference.'''
     from PIL import Image
@@ -119,7 +120,7 @@ class Detector(DetectBackend):
                              min_score=min_score,color=color
                             )
         
-def create_model(model_name,class_names=CLASS_NAMES,device=DEVICE,
+def create_model(model_name, class_names=CLASS_NAMES, device=DEVICE,
                  img_size = 640, conf_thres=0.25, iou_thres=0.45, max_det = 1000):
     import os 
     if not os.path.exists(str(PATH_YOLOv6/'weights')):
@@ -142,6 +143,7 @@ def yolov6s(class_names=CLASS_NAMES,device=DEVICE,img_size = 640, conf_thres=0.2
     return create_model('yolov6s',class_names,device,img_size = img_size, conf_thres=conf_thres, 
                     iou_thres=iou_thres, max_det = max_det)
 
+
 def yolov6m(class_names=CLASS_NAMES,device = DEVICE,img_size = 640, conf_thres=0.25, iou_thres=0.45, max_det = 1000):
     return create_model('yolov6m',class_names,device,img_size = img_size, conf_thres=conf_thres, 
                     iou_thres=iou_thres, max_det = max_det)
@@ -154,7 +156,6 @@ def yolov6l(class_names=CLASS_NAMES,device = DEVICE,img_size = 640, conf_thres=0
 def yolov6x(class_names=CLASS_NAMES,device=DEVICE,img_size = 640, conf_thres=0.25, iou_thres=0.45, max_det = 1000):
     return create_model('yolov6x',class_names,device,img_size = img_size, conf_thres=conf_thres, 
                     iou_thres=iou_thres, max_det = max_det)
-
 
 def custom(ckpt_path,class_names,device=DEVICE,img_size = 640, conf_thres=0.25, iou_thres=0.45, max_det = 1000):
     return Detector(ckpt_path,class_names,device,img_size = img_size, conf_thres=conf_thres, 
