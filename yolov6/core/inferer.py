@@ -60,9 +60,10 @@ class Inferer:
             self.model(torch.zeros(1, 3, *self.img_size).to(self.device).type_as(next(self.model.model.parameters())))  # warmup
 
         # Load data
-        self.files = LoadData(source)
+        self.webcam = webcam
+        self.webcam_addr = webcam_addr
+        self.files = LoadData(source, webcam, webcam_addr)
         self.source = source
-
 
 
     def model_switch(self, model, img_size):
@@ -89,11 +90,15 @@ class Inferer:
             det = non_max_suppression(pred_results, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)[0]
             t2 = time.time()
 
-            # Create output files in nested dirs that mirrors the structure of the images' dirs
-            rel_path = osp.relpath(osp.dirname(img_path), osp.dirname(self.source))
-            save_path = osp.join(save_dir, rel_path, osp.basename(img_path))  # im.jpg
-            txt_path = osp.join(save_dir, rel_path, osp.splitext(osp.basename(img_path))[0])
-            os.makedirs(osp.join(save_dir, rel_path), exist_ok=True)
+            if self.webcam:
+                save_path = osp.join(save_dir, self.webcam_addr)
+                txt_path = osp.join(save_dir, self.webcam_addr)
+            else:
+                # Create output files in nested dirs that mirrors the structure of the images' dirs
+                rel_path = osp.relpath(osp.dirname(img_path), osp.dirname(self.source))
+                save_path = osp.join(save_dir, rel_path, osp.basename(img_path))  # im.jpg
+                txt_path = osp.join(save_dir, rel_path, osp.splitext(osp.basename(img_path))[0])
+                os.makedirs(osp.join(save_dir, rel_path), exist_ok=True)
 
             gn = torch.tensor(img_src.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             img_ori = img_src.copy()
