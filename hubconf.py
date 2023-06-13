@@ -68,9 +68,8 @@ def check_img_size(img_size, s=32, floor=0):
     return new_size if isinstance(img_size, list) else [new_size] * 2
 
 
-def precess_image(path, img_size, stride):
-    '''Process image before image inference.'''
-    from PIL import Image
+def process_image(path, img_size, stride):
+    '''Preprocess image before inference.'''
     img_src = np.asarray(Image.open(path).convert('RGB'))
     image = letterbox(img_src, img_size, stride=stride)[0]
     # Convert
@@ -114,7 +113,7 @@ class Detector(DetectBackend):
         return prediction
 
     def predict(self, img_path):
-        img, img_src = precess_image(img_path, self.img_size, 32)
+        img, img_src = process_image(img_path, self.img_size, 32)
         img = img.to(self.device)
         if len(img.shape) == 3:
             img = img[None]
